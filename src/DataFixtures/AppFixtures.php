@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Translation;
+use App\Factory\TranslationFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -13,11 +14,6 @@ class AppFixtures extends Fixture
      */
     public function load(ObjectManager $manager)
     {
-        $translation = new Translation();
-        $translation->setSource("aaa");
-        // $manager->persist($product);
-        $manager->persist($translation);
-
-        $manager->flush();
+        TranslationFactory::createMany(10);
     }
 }
