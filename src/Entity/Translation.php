@@ -3,11 +3,11 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\WordRepository;
+use App\Repository\TranslationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=WordRepository::class)
+ * @ORM\Entity(repositoryClass=TranslationRepository::class)
  */
 #[ApiResource]
 class Translation
