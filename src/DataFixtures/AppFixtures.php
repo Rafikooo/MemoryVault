@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Translation;
+use App\Factory\LanguageFactory;
 use App\Factory\TranslationFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -14,6 +14,11 @@ class AppFixtures extends Fixture
      */
     public function load(ObjectManager $manager)
     {
-        TranslationFactory::createMany(10);
+        LanguageFactory::createMany(5);
+
+        TranslationFactory::createMany(10,
+        [
+            'language' => LanguageFactory::random()
+        ]);
     }
 }

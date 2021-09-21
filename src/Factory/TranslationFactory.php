@@ -38,7 +38,7 @@ final class TranslationFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'source' => self::faker()->languageCode,
+            'source' => self::faker()->languageCode(),
             'translated' => self::faker()->text(10),
         ];
     }
