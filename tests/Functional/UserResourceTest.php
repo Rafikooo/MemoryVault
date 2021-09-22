@@ -12,15 +12,6 @@ class UserResourceTest extends ApiTestCase
 {
     public function testCreateUser()
     {
-        $client = self::createClient();
-        $client->request('GET', '/api/users',[
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'json' => []
-            ]
-        ]);
-        $this->assertResponseStatusCodeSame(200);
-
         $user = new User();
         $user->setEmail('rafikoko@api.pl');
         $user->setPassword('foo');
@@ -30,5 +21,17 @@ class UserResourceTest extends ApiTestCase
         $em = $container->get(EntityManagerInterface::class);
         $em->persist($user);
         $em->flush();
+    }
+
+    public function testGetUserList()
+    {
+        $client = self::createClient();
+        $client->request('GET', '/api/users',[
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'json' => []
+            ]
+        ]);
+        $this->assertResponseStatusCodeSame(200);
     }
 }
