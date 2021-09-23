@@ -14,11 +14,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 #[ApiResource(
     denormalizationContext: [
-        "groups" => ["write"],
+        "groups" => ["user:write"],
         // "swagger_definition_name" => "Custom name"
     ],
     normalizationContext: [
-        'groups' => ["read"]
+        'groups' => ["user:read"]
     ]
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -28,13 +28,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
+    #[Groups(
+        ['user:read', 'user:write']
+    )]
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
     #[Groups(
-        ['read']
+        ['user:read', 'user:write']
     )]
     private $email;
 
@@ -47,13 +50,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
+    #[Groups(
+        ['user:write']
+    )]
+
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      */
     #[Groups(
-        ['read', 'write']
+        ['user:read', 'user:write']
     )]
     private $username;
 
