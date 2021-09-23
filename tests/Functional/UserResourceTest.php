@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\Functional;
 
 use App\Repository\UserRepository;
-use App\Test\UserApiTestCase;
+use App\Test\CustomApiTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 
-class UserResourceTest extends UserApiTestCase
+class UserResourceTest extends CustomApiTestCase
 {
     /**
      * @group truncate
@@ -29,16 +29,7 @@ class UserResourceTest extends UserApiTestCase
     public function testCreateUser(): void
     {
         $client = self::createClient();
-        $client->request('POST', '/api/users',[
-            'headers' => [
-                'Content-Type' => 'application/json',
-            ],
-            'json' => [
-                'email' => 'rafikoko@api.pl',
-                'password' => 'foo',
-                'username' => 'Rafikooo'
-            ]
-        ]);
+        $user = $this->createUserRequest($client, 'rafik@student.pl', 'Rafikowaty', 'foo');
         $this->assertResponseStatusCodeSame(201);
 
         $container = self::getContainer();
