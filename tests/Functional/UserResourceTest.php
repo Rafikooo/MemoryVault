@@ -4,10 +4,27 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
+use App\Repository\UserRepository;
+use App\Test\UserApiTestCase;
+use Doctrine\ORM\EntityManagerInterface;
 
-class UserResourceTest extends ApiTestCase
+class UserResourceTest extends UserApiTestCase
 {
+    /**
+     * @group truncate
+     */
+    public function testTruncateUsers(): void
+    {
+        $client = self::createClient();
+        $container = $client->getContainer();
+        $em = $container->get(EntityManagerInterface::class);
+        $qb = $em->createQueryBuilder();
+
+        $qb->delete('App\Entity\User')->getQuery()->execute();
+        $userRepository = $container->get(UserRepository::class);
+        $count = $userRepository->count([]);
+        $this->assertEmpty($count);
+    }
 
     public function testCreateUser(): void
     {
@@ -23,6 +40,10 @@ class UserResourceTest extends ApiTestCase
             ]
         ]);
         $this->assertResponseStatusCodeSame(201);
+
+        $container = self::getContainer();
+        $em = $container->get(EntityManagerInterface::class);
+
     }
 
     public function testGetUserList(): void
