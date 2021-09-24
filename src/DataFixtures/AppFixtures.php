@@ -3,7 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Factory\LanguageFactory;
-use App\Factory\TranslationFactory;
+use App\Factory\FlashcardFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -16,7 +16,7 @@ class AppFixtures extends Fixture
     {
         LanguageFactory::createMany(5);
 
-        TranslationFactory::createMany(10,
+        FlashcardFactory::createMany(10,
         [
             'language' => LanguageFactory::random()
         ]);
