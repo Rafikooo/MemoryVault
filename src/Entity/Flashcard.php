@@ -29,6 +29,17 @@ class Flashcard
      */
     private $hint;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="flashcards")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $category;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $answer;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -54,6 +65,30 @@ class Flashcard
     public function setHint(string $hint): self
     {
         $this->hint = $hint;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getAnswer(): ?string
+    {
+        return $this->answer;
+    }
+
+    public function setAnswer(string $answer): self
+    {
+        $this->answer = $answer;
 
         return $this;
     }
