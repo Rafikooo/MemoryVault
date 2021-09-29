@@ -40,6 +40,12 @@ class Flashcard
      */
     private $answer;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="flashcards")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $owner;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -89,6 +95,18 @@ class Flashcard
     public function setAnswer(string $answer): self
     {
         $this->answer = $answer;
+
+        return $this;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): self
+    {
+        $this->owner = $owner;
 
         return $this;
     }

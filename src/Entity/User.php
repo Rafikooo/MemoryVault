@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -63,6 +65,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         ['user:read', 'user:write']
     )]
     private $username;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Flashcard::class, mappedBy="owner")
+     */
+    private $flashcards;
+
+    public function __construct()
+    {
+        $this->flashcards = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -156,6 +168,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUsername(string $username): self
     {
         $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Flashcard[]
+     */
+    public function getFlashcards(): Collection
+    {
+        return $this->flashcards;
+    }
+
+    public function addFlashcard(Flashcard $flashcard): self
+    {
+        if (!$this->flashcards->contains($flashcard)) {
+            $this->flashcards[] = $flashcard;
+            $flashcard->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFlashcard(Flashcard $flashcard): self
+    {
+        if ($this->flashcards->removeElement($flashcard)) {
+            // set the owning side to null (unless already changed)
+            if ($flashcard->getOwner() === $this) {
+                $flashcard->setOwner(null);
+            }
+        }
 
         return $this;
     }
