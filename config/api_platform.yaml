@@ -1,0 +1,6 @@
+resources:
+    App\Entity\Category:
+        shortName: 'Category'
+        description: 'Categories used for defining flashcard'
+        attributes:
+            pagination_items_per_page : 1
