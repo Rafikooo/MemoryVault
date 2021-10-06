@@ -26,26 +26,17 @@ class UserResourceTest extends CustomApiTestCase
         $this->assertEmpty($count);
     }
 
-    public function testCreateUser(): void
+    /**
+     * @group role
+     */
+    public function testPostUserOnlyAsAdmin(): void
     {
+        $this->testTruncateUsers();
         $client = self::createClient();
-        $user = $this->createUserRequest($client, 'rafik@student.pl', 'Rafikowaty', 'foo');
-        $this->assertResponseStatusCodeSame(201);
+        $user = self::createUser('user@example.com', 'UsualUser', 'foo' );
 
-        $container = self::getContainer();
-        $em = $container->get(EntityManagerInterface::class);
+        $admin = self::createAdmin('admin@example.com', 'SuperUser', 'foo' );
+        $response = $this->logIn($client, 'user@example.com', 'foo');
 
-    }
-
-    public function testGetUserList(): void
-    {
-        $client = self::createClient();
-        $client->request('GET', '/api/users',[
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'json' => []
-            ]
-        ]);
-        $this->assertResponseStatusCodeSame(200);
     }
 }

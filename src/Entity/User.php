@@ -10,11 +10,16 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
 #[ApiResource(
+    collectionOperations: [
+        'GET' => ['security' => "is_granted('ROLE_USER')"],
+        'POST' => ['security' => "is_granted('ROLE_ADMIN')"]
+    ],
     denormalizationContext: [
         "groups" => ["user:write"],
         // "swagger_definition_name" => "Custom name"
@@ -30,17 +35,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(
-        ['user:read', 'user:write']
-    )]
+    #[Groups(['user:read', 'user:write'])]
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
-    #[Groups(
-        ['user:read', 'user:write']
-    )]
+    #[Groups(['user:read', 'user:write'])]
     private $email;
 
     /**
@@ -52,11 +53,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
-    #[Groups(
-        ['user:write']
-    )]
-
     private $password;
+
+    #[Groups(['user:write']), SerializedName('password')]
+    private $plainPassword;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
@@ -70,6 +70,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OneToMany(targetEntity=Flashcard::class, mappedBy="owner")
      */
     private $flashcards;
+
 
     public function __construct()
     {
@@ -198,6 +199,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $flashcard->setOwner(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
 
         return $this;
     }

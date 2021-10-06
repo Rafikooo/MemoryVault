@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class SecurityController extends AbstractController
@@ -14,9 +15,8 @@ class SecurityController extends AbstractController
         name: "app_login",
         methods: ['POST']
     )]
-    public function login(): JsonResponse
+    public function login(Request $request): JsonResponse
     {
-        // TODO - Force application/json header
-        return $this->json($this->getUser()->getUserIdentifier());
+        return $this->json(null, 204);
     }
 }
