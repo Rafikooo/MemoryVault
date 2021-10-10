@@ -74,6 +74,14 @@ class CustomApiTestCase extends ApiTestCase
         $this->assertResponseStatusCodeSame(204);
     }
 
+    protected function createUserAndLogIn(Client $client, string $email, string $username, string $password): User
+    {
+        $user = self::createUser($email, $username, $password);
+        self::logIn($client, $email, $password);
+
+        return $user;
+    }
+
     protected function getEntityManager(): EntityManagerInterface
     {
         return self::getContainer()->get(EntityManagerInterface::class);

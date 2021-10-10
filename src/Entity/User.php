@@ -7,18 +7,29 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
 #[ApiResource(
     collectionOperations: [
-        'GET' => ['security' => "is_granted('ROLE_USER')"],
-        'POST' => ['security' => "is_granted('ROLE_ADMIN')"]
+        'GET',
+        'POST' => [
+            'validation_groups' => ['Default', 'user:create'],
+        ]
+    ],
+    itemOperations: [
+        'GET',
+        'PUT' => [
+            'validation_groups' => ['user:put'],
+            'groups' => ['user:put']
+        ]
     ],
     denormalizationContext: [
         "groups" => ["user:write"],
@@ -26,8 +37,9 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
     ],
     normalizationContext: [
         'groups' => ["user:read"]
-    ]
+    ],
 )]
+#[UniqueEntity(fields: ['username', 'email'], message: "Bad request")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
@@ -40,6 +52,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\Email()
      */
     #[Groups(['user:read', 'user:write'])]
     private $email;
@@ -55,6 +68,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $password;
 
+    /**
+     * @Assert\NotBlank(groups="user:create")
+     * @Assert\Length(min=8)
+     */
     #[Groups(['user:write']), SerializedName('password')]
     private $plainPassword;
 

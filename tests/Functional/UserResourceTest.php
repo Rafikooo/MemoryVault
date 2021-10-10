@@ -27,16 +27,25 @@ class UserResourceTest extends CustomApiTestCase
     }
 
     /**
-     * @group role
+     * @group post
      */
-    public function testPostUserOnlyAsAdmin(): void
+    public function testPostUser(): void
     {
         $this->testTruncateUsers();
         $client = self::createClient();
-        $user = self::createUser('user@example.com', 'UsualUser', 'foo' );
+        $user = self::createUserAndLogIn($client, 'user@example.com', 'user', 'foo' );
+    }
 
-        $admin = self::createAdmin('admin@example.com', 'SuperUser', 'foo' );
-        $response = $this->logIn($client, 'user@example.com', 'foo');
-
+    public function testUpdateUser(): void
+    {
+        $this->testTruncateUsers();
+        $client = self::createClient();
+        $user = self::createUserAndLogIn($client, 'user@example.com', 'user', 'foo' );
+        $client->request('PUT', '/api/users/' . $user->getId(), [
+            'json' => [
+                'username' => 'updatedNickname'
+            ]
+        ]);
+        self::assertResponseIsSuccessful();
     }
 }
