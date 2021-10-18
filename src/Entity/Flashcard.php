@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\FlashcardRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=FlashcardRepository::class)
@@ -21,6 +22,7 @@ class Flashcard
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
      */
     private $information;
 
@@ -32,17 +34,20 @@ class Flashcard
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="flashcards")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank
      */
     private $category;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank
      */
     private $answer;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="flashcards")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank
      */
     private $owner;
 
