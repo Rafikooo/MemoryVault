@@ -1,3 +1,7 @@
 index:
     path: /
     controller: App\Controller\HomepageController::index
+flashcards:
+    path: /flashcards
+    controller: App\Controller\FlashcardController::listRandomFlashcards
+    methods: ['GET']
