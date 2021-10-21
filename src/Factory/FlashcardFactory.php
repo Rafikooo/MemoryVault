@@ -38,8 +38,9 @@ final class FlashcardFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'source' => self::faker()->languageCode(),
-            'translated' => self::faker()->text(10),
+            'information' => self::faker()->sentence(10),
+            'answer' => self::faker()->text(10),
+            'hint' => self::faker()->sentence()
         ];
     }
 
