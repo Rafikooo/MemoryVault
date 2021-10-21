@@ -568,6 +568,9 @@
     "willdurand/negotiation": {
         "version": "3.0.0"
     },
+    "zenstruck/assert": {
+        "version": "v1.0.0"
+    },
     "zenstruck/callback": {
         "version": "v1.4.0"
     },
